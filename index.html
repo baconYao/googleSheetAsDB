@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>TCP/IP成績查詢</title>
+  <link rel="shortcut icon" type="image/x-icon" href="http://zinggadget.com/wp-content/uploads/2015/11/apple-7.jpg">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
+
+</head>
+<body>
+
+
+
+  <div class="ui middle aligned center aligned grid" id="input-form">
+    <div class="column">
+      <div class="ui inverted dimmer" id="dimm">
+        <div class="ui text loader">Loading</div>
+      </div>
+      <h2 class="ui teal image header">
+        <div class="content">
+          TCP/IP成績查詢
+        </div>
+      </h2>
+      <form class="ui large form">
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" id="numberInput" placeholder="學號">
+            </div>
+          </div>
+
+          <input class="ui fluid large teal submit button" type="button" value="查詢" onclick="Search()">
+          <!-- <div class="ui fluid large teal submit button">Login</div> -->
+        </div>
+
+        <div class="ui error message"></div>
+      </form>
+    </div>
+  </div>
+
+
+  <div id="point-tables" style="display: none; padding-top: 5%">
+    <h2 class="ui center aligned icon header">
+      <i class="circular user icon"></i>
+      <div id="nameId"></div>
+    </h2>
+    <p></p>
+    <div id="hw-table" class="ui container">
+      <h2 class="ui centered header">作業分數</h2>
+      <table class="ui very padded olive table">
+        <thead>
+          <tr class="center aligned">
+            <th>作業</th>
+            <th>分數</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="center aligned">作業1</td>
+            <td id="hw1" class="center aligned" ></td>
+            <td id="ps1" class="center aligned"></td>
+          </tr>
+          <tr>
+            <td class="center aligned">作業2</td>
+            <td id="hw2" class="center aligned"></td>
+            <td id="ps2" class="center aligned"></td>
+          </tr>
+          <tr>
+            <td class="center aligned">作業3</td>
+            <td id="hw3" class="center aligned"></td>
+            <td id="ps3" class="center aligned"></td>
+          </tr>
+          <tr>
+            <td class="center aligned">作業4</td>
+            <td id="hw4" class="center aligned"></td>
+            <td id="ps4" class="center aligned"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p></p>
+
+    <div class="ui raised very padded text container">
+      <h2 class="ui centered header">考試分數</h2>
+      <table class="ui centered violet table">
+        <thead>
+          <tr class="center aligned">
+            <th>考試</th>
+            <th>分數</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="center aligned">
+            <td>期中考1</td>
+            <td id="t1"></td>
+          </tr>
+          <tr class="center aligned">
+            <td>期中考2</td>
+            <td id="t2"></td>
+          </tr>
+          <tr class="center aligned">
+            <td>期末考</td>
+            <td id="t3"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+  <script type="text/javascript">
+    function Search(){
+      var root = document.getElementById("dimm");
+      if(document.getElementById("numberInput").value === "") {
+        alert("請輸入學號");
+        return;
+      }
+      root.classList.add('active');
+      $.get("https://script.google.com/macros/s/AKfycbwOQRvM8Ijm9Ipmp87BdAHKg1RWcuEn_4vDwubfKbKJGMEVRRM/exec", {
+          "id": document.getElementById("numberInput").value
+      },
+      function (data) {
+        // console.log(data);
+        var arr = data.split(",");
+        var obj = {                               //h: homework, ps: 備註, t: 考試
+          id: arr[0],
+          name: arr[1],
+          h1: arr[2],
+          ps1: arr[3],
+          h2: arr[4],
+          ps2: arr[5],
+          h3: arr[6],
+          ps3: arr[7],
+          h4: arr[8],
+          ps4: arr[9],
+          t1: arr[10],
+          t2: arr[11],
+          t3: arr[12]
+        };
+        var root = document.getElementById("dimm");
+        root.classList.remove('active');
+
+        document.getElementById("input-form").style.display = "none";
+
+        document.getElementById("nameId").innerHTML = obj.id + " " + obj.name;
+        document.getElementById("hw1").innerHTML = obj.h1;
+        document.getElementById("ps1").innerHTML = obj.ps1;
+        document.getElementById("hw2").innerHTML = obj.h2;
+        document.getElementById("ps2").innerHTML = obj.ps2;
+        document.getElementById("hw3").innerHTML = obj.h3;
+        document.getElementById("ps3").innerHTML = obj.ps3;
+        document.getElementById("hw4").innerHTML = obj.h4;
+        document.getElementById("ps4").innerHTML = obj.ps4;
+        document.getElementById("t1").innerHTML = obj.t1;
+        document.getElementById("t2").innerHTML = obj.t2;
+        document.getElementById("t3").innerHTML = obj.t3;
+
+
+
+        document.getElementById("point-tables").style.display = "block";
+        // alert(obj.id);
+        console.log(obj);
+        // document.write("--------------------------<br>");
+        // document.write("No.,Name,Score <br>"+data+"<br>");
+        // document.write("--------------------------<br>");
+      });
+    }
+  </script>
+</body>
+</html>
