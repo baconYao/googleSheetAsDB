@@ -48,9 +48,50 @@
 
   <div id="point-tables" style="display: none; padding-top: 5%">
     <h2 class="ui center aligned icon header">
-      <i class="circular user icon"></i>
+      <i id="uicon" class="circular user icon"></i>
+      <i id="uicon2" class="green thumbs up icon" style="display: none;"></i>
+      <i id="uicon3" class="red frown icon" style="display: none"></i>
       <div id="nameId"></div>
+      <div id="type"></div>
     </h2>
+    <p></p>
+
+    <div id="final-table" class="ui container" style="display: none; padding-top: 1%">
+      <h2 class="ui centered header">期末總成績</h2>
+      <table class="ui very padded inverted table">
+        <thead>
+          <tr class="center aligned">
+            <th>分數</th>
+            <th>配分</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="finalPoint center aligned" style="color:aqua; font-size:30px"></td>
+            <td class="center aligned">作業每個6.25%  考試每次25%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="final-table2" class="ui container" style="display: none; padding-top: 1%">
+      <h2 class="ui centered header">期末總成績</h2>
+      <table class="ui very padded inverted table">
+        <thead>
+          <tr class="center aligned">
+            <th>分數</th>
+            <th>配分</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="finalPoint center aligned" style="color:red; font-size:30px"></td>
+            <td class="center aligned">作業每個6.25%，考試每次25%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <p></p>
     <div id="hw-table" class="ui container">
       <h2 class="ui centered header">作業分數</h2>
@@ -114,8 +155,8 @@
       </table>
     </div>
   </div>
-
-
+  <p></p>
+  <p></p>
 
 
   <script type="text/javascript">
@@ -133,8 +174,8 @@
         // console.log(data);
         var arr = data.split(",");
         var obj = {                               //h: homework, ps: 備註, t: 考試
-          id: arr[0],
-          name: arr[1],
+          id: arr[0],           //學號
+          name: arr[1],         //姓名
           h1: arr[2],
           ps1: arr[3],
           h2: arr[4],
@@ -145,7 +186,8 @@
           ps4: arr[9],
           t1: arr[10],
           t2: arr[11],
-          t3: arr[12]
+          t3: arr[12],
+          final: arr[13],                               //final 期末總成績
         };
         var root = document.getElementById("dimm");
         root.classList.remove('active');
@@ -164,6 +206,8 @@
         document.getElementById("t1").innerHTML = obj.t1;
         document.getElementById("t2").innerHTML = obj.t2;
         document.getElementById("t3").innerHTML = obj.t3;
+        document.getElementsByClassName("finalPoint")[0].innerHTML = obj.final;
+        document.getElementsByClassName("finalPoint")[1].innerHTML = obj.final;
 
 
 
@@ -173,6 +217,28 @@
         // document.write("--------------------------<br>");
         // document.write("No.,Name,Score <br>"+data+"<br>");
         // document.write("--------------------------<br>");
+
+        if(obj.final != '') {
+          setTimeout(function() { 
+            $('#uicon')
+              .transition('fade up', '1000ms')
+            ;
+            
+            if(parseInt(obj.final) >= 70) {
+              $('#uicon2').transition('browse', '1000ms');
+              $('#final-table').transition('swing down', '1000ms');
+              document.getElementById("type").innerHTML = "及格";
+              document.getElementById("type").style.color = "green";
+            } else {
+              $('#uicon3').transition('browse', '1000ms');
+              $('#final-table2').transition('swing down', '1000ms');
+              document.getElementById("type").innerHTML = "   不及格";
+              document.getElementById("type").style.color = "red";              
+            }
+            
+            }, 1000
+          );
+        }
       });
     }
   </script>
